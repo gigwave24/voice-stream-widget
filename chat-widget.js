@@ -545,8 +545,8 @@
             welcomeText: '',
             responseTimeText: '',
             poweredBy: {
-                text: 'Powered by n8n',
-                link: 'https://n8n.partnerlinks.io/fabimarkl'
+                text: 'Powered by PORTMAN AI',
+                link: 'https://portman.university/'
             }
         },
         style: {
@@ -632,15 +632,18 @@
     const chatInterfaceHTML = `
         <div class="chat-body">
             <div class="chat-messages"></div>
-            <div class="chat-controls">
-                <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
-                <button class="chat-submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 2L11 13"></path>
-                        <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-                    </svg>
-                </button>
-            </div>
+<div class="chat-controls">
+  <textarea class="chat-textarea" placeholder="Type your message..."></textarea>
+
+  <!-- Text Button -->
+  <button id="sendTextBtn" title="Send Text">💬</button>
+
+  <!-- Dictate Button (Whisper) -->
+  <button id="dictateBtn" title="Record & Transcribe">📝</button>
+
+  <!-- Live Voice Chat (GPT-4o Streaming) -->
+  <button id="liveVoiceBtn" title="Live Voice Chat">🎤</button>
+</div>
             <div class="chat-footer">
                 <a class="chat-footer-link" href="${settings.branding.poweredBy.link}" target="_blank">${settings.branding.poweredBy.text}</a>
             </div>
@@ -668,7 +671,60 @@
     const chatBody = chatWindow.querySelector('.chat-body');
     const messagesContainer = chatWindow.querySelector('.chat-messages');
     const messageTextarea = chatWindow.querySelector('.chat-textarea');
-    const sendButton = chatWindow.querySelector('.chat-submit');
+    const sendTextButton = chatWindow.querySelector('#sendTextBtn');
+    const dictateButton = chatWindow.querySelector('#dictateBtn');
+
+    // Text & Voice Button Event Listeners
+sendTextButton.addEventListener('click', () => {
+  const messageText = messageTextarea.value.trim();
+  if (messageText && !isWaitingForResponse) {
+    submitMessage(messageText, "text");
+    messageTextarea.value = '';
+    messageTextarea.style.height = 'auto';
+  }
+});
+
+dictateButton.addEventListener('click', () => {
+  try {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US'; // or 'ms-MY' for Bahasa Malaysia
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    const listeningMessage = document.createElement('div');
+    listeningMessage.className = 'chat-bubble bot-bubble';
+    listeningMessage.textContent = "🎙 Listening...";
+    messagesContainer.appendChild(listeningMessage);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+let liveTranscript = '';
+
+recognition.onresult = (event) => {
+  liveTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    liveTranscript += event.results[i][0].transcript;
+  }
+
+  // Show live transcript while speaking
+  listeningMessage.textContent = "🎙 " + liveTranscript;
+
+  // When speech is done
+  if (event.results[event.results.length - 1].isFinal && !isWaitingForResponse) {
+    messagesContainer.removeChild(listeningMessage);
+    submitMessage(liveTranscript, "voice");
+  }
+};
+
+    recognition.onerror = (event) => {
+      messagesContainer.removeChild(listeningMessage);
+      alert('Voice recognition error: ' + event.error);
+    };
+
+    recognition.start();
+  } catch (error) {
+    alert("Speech recognition is not supported in this browser.");
+  }
+});
     
     // Registration form elements
     const registrationForm = chatWindow.querySelector('.registration-form');
