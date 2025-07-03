@@ -327,13 +327,12 @@
             box-shadow: var(--chat-shadow-md);
         }
 
-        .chat-assist-widget .chat-submit svg {
-  width: 20px;
-  height: 20px;
-  stroke: white;
-  stroke-width: 2;
+        .chat-assist-widget .chat-submit svg *,
+.chat-assist-widget .chat-submit svg polygon,
+.chat-assist-widget .chat-submit svg line {
+  stroke: white !important;
+  fill: none !important;
 }
-
         .chat-assist-widget .chat-launcher {
             position: fixed;
             bottom: 20px;
@@ -737,8 +736,9 @@ const welcomeScreenHTML = `
       <div class="chat-input-top" style="display: flex; align-items: flex-end; gap: 10px;">
         <textarea class="chat-textarea" placeholder="Type your message here..." rows="1" style="flex: 1;"></textarea>
         <button class="chat-submit" title="Send message">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+       stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       viewBox="0 0 24 24">
     <line x1="22" y1="2" x2="11" y2="13"></line>
     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
   </svg>
