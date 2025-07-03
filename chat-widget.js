@@ -1,3 +1,4 @@
+// v1.0.2 update - minor change to trigger new release
 // Interactive Chat Widget for n8n
 (function() {
     // Initialize widget only once
@@ -530,6 +531,27 @@
             cursor: not-allowed;
             transform: none;
         }
+        .chat-assist-widget .chat-voice-message-btn,
+.chat-assist-widget .chat-stream-mode-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--chat-radius-md);
+    border: none;
+    background: #f3f4f6;
+    color: var(--chat-color-text);
+    font-size: 20px;
+    cursor: pointer;
+    transition: var(--chat-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-assist-widget .chat-voice-message-btn:hover,
+.chat-assist-widget .chat-stream-mode-btn:hover {
+    background: var(--chat-color-light);
+}
+
     `;
     document.head.appendChild(widgetStyles);
 
@@ -546,7 +568,7 @@
             responseTimeText: '',
             poweredBy: {
                 text: 'Powered by PORTMAN AI',
-                link: 'https://portman.university/'
+                link: 'https://portman.university'
             }
         },
         style: {
@@ -594,55 +616,57 @@
     chatWindow.className = `chat-window ${settings.style.position === 'left' ? 'left-side' : 'right-side'}`;
     
     // Create welcome screen with header
-    const welcomeScreenHTML = `
-        <div class="chat-header">
-            <img class="chat-header-logo" src="${settings.branding.logo}" alt="${settings.branding.name}">
-            <span class="chat-header-title">${settings.branding.name}</span>
-            <button class="chat-close-btn">×</button>
-        </div>
-        <div class="chat-welcome">
-            <h2 class="chat-welcome-title">${settings.branding.welcomeText}</h2>
-            <button class="chat-start-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                Start chatting
-            </button>
-            <p class="chat-response-time">${settings.branding.responseTimeText}</p>
-        </div>
-        <div class="user-registration">
-            <h2 class="registration-title">Please enter your details to start chatting</h2>
-            <form class="registration-form">
-                <div class="form-field">
-                    <label class="form-label" for="chat-user-name">Name</label>
-                    <input type="text" id="chat-user-name" class="form-input" placeholder="Your name" required>
-                    <div class="error-text" id="name-error"></div>
-                </div>
-                <div class="form-field">
-                    <label class="form-label" for="chat-user-email">Email</label>
-                    <input type="email" id="chat-user-email" class="form-input" placeholder="Your email address" required>
-                    <div class="error-text" id="email-error"></div>
-                </div>
-                <button type="submit" class="submit-registration">Continue to Chat</button>
-            </form>
-        </div>
-    `;
+const welcomeScreenHTML = `
+    <div class="chat-header">
+        <img class="chat-header-logo" src="${settings.branding.logo}" alt="${settings.branding.name}">
+        <span class="chat-header-title">${settings.branding.name}</span>
+        <button class="chat-close-btn">×</button>
+    </div>
+    <div class="chat-welcome">
+        <h2 class="chat-welcome-title">${settings.branding.welcomeText}</h2>
+        <button class="chat-start-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Start chatting
+        </button>
+        <p class="chat-response-time">${settings.branding.responseTimeText}</p>
+    </div>
+    ${window.ChatWidgetConfig?.skipCollectUserDetails ? '' : `
+    <div class="user-registration">
+        <h2 class="registration-title">Please enter your details to start chatting</h2>
+        <form class="registration-form">
+            <div class="form-field">
+                <label class="form-label" for="chat-user-name">Name</label>
+                <input type="text" id="chat-user-name" class="form-input" placeholder="Your name" required>
+                <div class="error-text" id="name-error"></div>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="chat-user-email">Email</label>
+                <input type="email" id="chat-user-email" class="form-input" placeholder="Your email address" required>
+                <div class="error-text" id="email-error"></div>
+            </div>
+            <button type="submit" class="submit-registration">Continue to Chat</button>
+        </form>
+    </div>`}
+`;
 
     // Create chat interface without duplicating the header
     const chatInterfaceHTML = `
         <div class="chat-body">
             <div class="chat-messages"></div>
 <div class="chat-controls">
-  <textarea class="chat-textarea" placeholder="Type your message..."></textarea>
-
-  <!-- Text Button -->
-  <button id="sendTextBtn" title="Send Text">💬</button>
-
-  <!-- Dictate Button (Whisper) -->
-  <button id="dictateBtn" title="Record & Transcribe">📝</button>
-
-  <!-- Live Voice Chat (GPT-4o Streaming) -->
-  <button id="liveVoiceBtn" title="Live Voice Chat">🎤</button>
+    <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
+    
+    <button class="chat-voice-message-btn" title="Record voice message">🎤</button>
+    <button class="chat-stream-mode-btn" title="Start voice mode">🗣️</button>
+    
+    <button class="chat-submit">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2L11 13"></path>
+            <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+        </svg>
+    </button>
 </div>
             <div class="chat-footer">
                 <a class="chat-footer-link" href="${settings.branding.poweredBy.link}" target="_blank">${settings.branding.poweredBy.text}</a>
@@ -654,7 +678,7 @@
     
     // Create toggle button
     const launchButton = document.createElement('button');
-    launchButton.className = `chat-launcher chat-start-btn ${settings.style.position === 'left' ? 'left-side' : 'right-side'}`;
+    launchButton.className = `chat-launcher ${settings.style.position === 'left' ? 'left-side' : 'right-side'}`;
     launchButton.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
@@ -671,59 +695,16 @@
     const chatBody = chatWindow.querySelector('.chat-body');
     const messagesContainer = chatWindow.querySelector('.chat-messages');
     const messageTextarea = chatWindow.querySelector('.chat-textarea');
-    const sendTextButton = chatWindow.querySelector('#sendTextBtn');
-    const dictateButton = chatWindow.querySelector('#dictateBtn');
+    const sendButton = chatWindow.querySelector('.chat-submit');
+    const voiceMessageBtn = chatWindow.querySelector('.chat-voice-message-btn');
+const streamModeBtn = chatWindow.querySelector('.chat-stream-mode-btn');
 
-    // Text & Voice Button Event Listeners
-sendTextButton.addEventListener('click', () => {
-  const messageText = messageTextarea.value.trim();
-  if (messageText && !isWaitingForResponse) {
-    submitMessage(messageText, "text");
-    messageTextarea.value = '';
-    messageTextarea.style.height = 'auto';
-  }
+voiceMessageBtn.addEventListener('click', () => {
+    alert('🎤 Voice message button clicked! (recording coming soon)');
 });
 
-dictateButton.addEventListener('click', () => {
-  try {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US'; // or 'ms-MY' for Bahasa Malaysia
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-
-    const listeningMessage = document.createElement('div');
-    listeningMessage.className = 'chat-bubble bot-bubble';
-    listeningMessage.textContent = "🎙 Listening...";
-    messagesContainer.appendChild(listeningMessage);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-let liveTranscript = '';
-
-recognition.onresult = (event) => {
-  liveTranscript = '';
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    liveTranscript += event.results[i][0].transcript;
-  }
-
-  // Show live transcript while speaking
-  listeningMessage.textContent = "🎙 " + liveTranscript;
-
-  // When speech is done
-  if (event.results[event.results.length - 1].isFinal && !isWaitingForResponse) {
-    messagesContainer.removeChild(listeningMessage);
-    submitMessage(liveTranscript, "voice");
-  }
-};
-
-    recognition.onerror = (event) => {
-      messagesContainer.removeChild(listeningMessage);
-      alert('Voice recognition error: ' + event.error);
-    };
-
-    recognition.start();
-  } catch (error) {
-    alert("Speech recognition is not supported in this browser.");
-  }
+streamModeBtn.addEventListener('click', () => {
+    alert('🗣️ Real-time voice mode clicked! (live streaming coming soon)');
 });
     
     // Registration form elements
@@ -929,19 +910,28 @@ recognition.onresult = (event) => {
         isWaitingForResponse = true;
         
         // Get user info if available
-        const email = nameInput ? nameInput.value.trim() : "";
-        const name = emailInput ? emailInput.value.trim() : "";
-        
-        const requestData = {
-            action: "sendMessage",
-            sessionId: conversationId,
-            route: settings.webhook.route,
-            chatInput: messageText,
-            metadata: {
-                userId: email,
-                userName: name
-            }
-        };
+const userId = window.ChatWidgetConfig?.user?.id || "";
+const userName = window.ChatWidgetConfig?.user?.name || "";
+const userEmail = window.ChatWidgetConfig?.user?.email || "";
+const courseId = window.ChatWidgetConfig?.user?.courseId || "";
+const lessonId = window.ChatWidgetConfig?.user?.lessonId || "";
+
+const email = emailInput ? emailInput.value.trim() : userEmail;
+const name = nameInput ? nameInput.value.trim() : userName;
+
+const requestData = {
+  action: "sendMessage",
+  sessionId: conversationId,
+  route: settings.webhook.route,
+  chatInput: messageText,
+  metadata: {
+    userId: userId || email,
+    userName: userName || name,
+    userEmail: userEmail || email,
+    courseId: courseId,
+    lessonId: lessonId
+  }
+};
 
         // Display user message
         const userMessage = document.createElement('div');
@@ -999,8 +989,22 @@ recognition.onresult = (event) => {
     }
 
     // Event listeners
-    startChatButton.addEventListener('click', showRegistrationForm);
+    startChatButton.addEventListener('click', () => {
+    if (window.ChatWidgetConfig?.skipCollectUserDetails) {
+        // If skip user details → straight open chat body
+        conversationId = createSessionId(); // create new conversation
+        chatBody.classList.add('active');
+        chatWelcome.style.display = 'none';
+    } else {
+        // Else → show registration form
+        showRegistrationForm();
+    }
+});
+
+    if (!window.ChatWidgetConfig?.skipCollectUserDetails && registrationForm) {
     registrationForm.addEventListener('submit', handleRegistration);
+}
+
     
     sendButton.addEventListener('click', () => {
         const messageText = messageTextarea.value.trim();
