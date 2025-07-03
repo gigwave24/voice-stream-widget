@@ -735,11 +735,12 @@ const welcomeScreenHTML = `
       <div class="chat-input-top" style="display: flex; align-items: flex-end; gap: 10px;">
         <textarea class="chat-textarea" placeholder="Type your message here..." rows="1" style="flex: 1;"></textarea>
         <button class="chat-submit" title="Send message">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 11L3 2v20l19-9z" />
-      </svg>
-    </button>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="22" y1="2" x2="11" y2="13"></line>
+    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+  </svg>
+</button>
   </div>
 
   <!-- Bottom row: 🎤 voice + 🗣️ realtime mode -->
