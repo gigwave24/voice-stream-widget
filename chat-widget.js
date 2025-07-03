@@ -553,7 +553,7 @@
 }
 .chat-assist-widget .chat-controls {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column; /* Ini penting untuk row atas & bawah */
     gap: 10px;
     padding: 16px;
     background: var(--chat-color-surface);
@@ -583,8 +583,8 @@
 
 .chat-assist-widget .chat-button-area {
     display: flex;
-    gap: 8px;
-    align-items: flex-end;
+    gap: 10px;
+    justify-content: space-between;
 }
 
 .chat-assist-widget .chat-button-area button {
@@ -714,19 +714,24 @@ const welcomeScreenHTML = `
         <div class="chat-body">
             <div class="chat-messages"></div>
 <div class="chat-controls">
-    <div class="chat-input-area">
-        <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
-    </div>
-    <div class="chat-button-area">
-        <button class="chat-voice-message-btn" title="Record voice message">🎤</button>
-        <button class="chat-stream-mode-btn" title="Start voice mode">🗣️</button>
-        <button class="chat-submit">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 2L11 13"></path>
-                <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-            </svg>
-        </button>
-    </div>
+
+  <!-- Top row: Textarea and Submit button -->
+  <div class="chat-input-top">
+    <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
+    <button class="chat-submit" title="Send message">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11L3 2v20l19-9z" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Bottom row: 🎤 voice + 🗣️ realtime mode -->
+  <div class="chat-button-area">
+    <button class="chat-voice-message-btn" title="Record voice message">🎤</button>
+    <button class="chat-stream-mode-btn" title="Start voice mode">🗣️</button>
+  </div>
+  
 </div>
             <div class="chat-footer">
                 <a class="chat-footer-link" href="${settings.branding.poweredBy.link}" target="_blank">${settings.branding.poweredBy.text}</a>
