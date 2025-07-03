@@ -551,7 +551,65 @@
 .chat-assist-widget .chat-stream-mode-btn:hover {
     background: var(--chat-color-light);
 }
+.chat-assist-widget .chat-controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 16px;
+    background: var(--chat-color-surface);
+    border-top: 1px solid var(--chat-color-light);
+}
 
+.chat-assist-widget .chat-input-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.chat-assist-widget .chat-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--chat-color-light);
+    border-radius: var(--chat-radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: none;
+    max-height: 160px;
+    min-height: 44px;
+    overflow-y: auto;
+}
+
+.chat-assist-widget .chat-button-area {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.chat-assist-widget .chat-button-area button {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: none;
+    border-radius: var(--chat-radius-md);
+    background: #f3f4f6;
+    color: var(--chat-color-text);
+    cursor: pointer;
+    transition: var(--chat-transition);
+}
+
+.chat-assist-widget .chat-button-area button:hover {
+    background: var(--chat-color-light);
+}
+
+.chat-assist-widget .chat-submit {
+    background: linear-gradient(135deg, var(--chat-color-primary), var(--chat-color-secondary));
+    color: white;
+}
     `;
     document.head.appendChild(widgetStyles);
 
@@ -656,17 +714,19 @@ const welcomeScreenHTML = `
         <div class="chat-body">
             <div class="chat-messages"></div>
 <div class="chat-controls">
-    <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
-    
-    <button class="chat-voice-message-btn" title="Record voice message">🎤</button>
-    <button class="chat-stream-mode-btn" title="Start voice mode">🗣️</button>
-    
-    <button class="chat-submit">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 2L11 13"></path>
-            <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
-        </svg>
-    </button>
+    <div class="chat-input-area">
+        <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
+    </div>
+    <div class="chat-button-area">
+        <button class="chat-voice-message-btn" title="Record voice message">🎤</button>
+        <button class="chat-stream-mode-btn" title="Start voice mode">🗣️</button>
+        <button class="chat-submit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+            </svg>
+        </button>
+    </div>
 </div>
             <div class="chat-footer">
                 <a class="chat-footer-link" href="${settings.branding.poweredBy.link}" target="_blank">${settings.branding.poweredBy.text}</a>
