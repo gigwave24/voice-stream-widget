@@ -567,7 +567,14 @@
     justify-content: flex-end;
 }
 
+.chat-assist-widget .chat-input-top {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
 .chat-assist-widget .chat-textarea {
+    flex: 1; /* Tambah ini untuk auto-expand */
     width: 100%;
     padding: 14px 16px;
     border: 1px solid var(--chat-color-light);
@@ -609,6 +616,15 @@
 .chat-assist-widget .chat-submit {
     background: linear-gradient(135deg, var(--chat-color-primary), var(--chat-color-secondary));
     color: white;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: var(--chat-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--chat-transition);
 }
     `;
     document.head.appendChild(widgetStyles);
@@ -715,10 +731,10 @@ const welcomeScreenHTML = `
             <div class="chat-messages"></div>
 <div class="chat-controls">
 
-  <!-- Top row: Textarea and Submit button -->
-  <div class="chat-input-top">
-    <textarea class="chat-textarea" placeholder="Type your message here..." rows="1"></textarea>
-    <button class="chat-submit" title="Send message">
+        <!-- ✅ Top row: Textarea + Submit inline -->
+      <div class="chat-input-top" style="display: flex; align-items: flex-end; gap: 10px;">
+        <textarea class="chat-textarea" placeholder="Type your message here..." rows="1" style="flex: 1;"></textarea>
+        <button class="chat-submit" title="Send message">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M22 11L3 2v20l19-9z" />
