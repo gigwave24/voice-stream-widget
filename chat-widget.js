@@ -328,9 +328,11 @@
         }
 
         .chat-assist-widget .chat-submit svg {
-            width: 22px;
-            height: 22px;
-        }
+  width: 20px;
+  height: 20px;
+  stroke: white;
+  stroke-width: 2;
+}
 
         .chat-assist-widget .chat-launcher {
             position: fixed;
